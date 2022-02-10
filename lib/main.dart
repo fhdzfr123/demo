@@ -1,4 +1,6 @@
+import 'package:demo/landingpage.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,104 +12,314 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LandingScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class MyCalculator extends StatefulWidget {
+  MyCalculator({Key? key, required this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyCalculatorState createState() => _MyCalculatorState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class _MyCalculatorState extends State<MyCalculator> {
+  double answer = 0.0;
+  String inputString = '';
+  List<String> operators = ['+','-','x','÷','%'];
+  String number = '';
+  bool resultState = false;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Container(
+        padding: EdgeInsets.all(10),
+        width: width,
+        height: height,
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: Text(answer!=0 ? answer.toString() : inputString!=''? inputString : '0',style: TextStyle(fontSize: 55),)),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            SizedBox(
+              height: height*0.25,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                button('AC',Colors.grey),
+                button('+/-',Colors.grey),
+                button('%',Colors.grey),
+                button('÷',Colors.orangeAccent.shade100),
+              ],
+            ),
+            SizedBox(height: 15,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                button('7',Colors.black),
+                button('8',Colors.black),
+                button('9',Colors.black),
+                button('x',Colors.orangeAccent.shade100),
+              ],
+            ),
+            SizedBox(height: 15,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                button('4',Colors.black),
+                button('5',Colors.black),
+                button('6',Colors.black),
+                button('-',Colors.orangeAccent.shade100),
+              ],
+            ),
+            SizedBox(height: 15,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                button('1',Colors.black),
+                button('2',Colors.black),
+                button('3',Colors.black),
+                button('+',Colors.orangeAccent.shade100),
+              ],
+            ),
+            SizedBox(height: 15,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))), primary: Colors.white),
+                  child: Container(
+                    width: width*0.35,
+                    height: height*0.08,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '0',
+                        style: TextStyle(fontSize: 24,color: Colors.black),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    if(resultState)
+                      {
+                        setState(() {
+                          inputString = '';
+                          number = '';
+                          answer = 0;
+                          resultState = false;
+                        });
+                      }
+                    if(inputString!='') {
+                      setState(() {
+                        inputString = inputString + '0';
+                      });
+                      print('0');
+                    }
+                  },
+                ),
+                SizedBox(width: width*0.05,),
+                /*Container(
+                  child: PhysicalShape(
+                    color: Colors.white,
+                    shadowColor: Colors.grey,
+                    elevation: 4,
+                    clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40)))),
+                    child: Container(
+                      padding: EdgeInsets.only(top: height*0.02,left: width*0.04),
+                      height: height*0.08,
+                      width: width*0.45,
+                      child: Text('0',style: TextStyle(fontSize: 30),textAlign: TextAlign.left,),
+                    ),
+                  ),
+                ),*/
+                button('.',Colors.black),
+                button('=',Colors.orangeAccent.shade100),
+              ],
+            )
           ],
         ),
+      )
+    );
+}
+
+  Widget button(String text,Color? color){
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape: const CircleBorder(), primary: Colors.white),
+        child: Container(
+          width: width*0.1,
+          height: height*0.1,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(shape: BoxShape.circle),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 24,color: color),
+          ),
+        ),
+        onPressed: () {
+          if(text!='AC' && text!='+/-' && text!='=' ) {
+            if(inputString.length>=1)
+              {
+                if(operators.contains(inputString[inputString.length-1]) && operators.contains(text))
+                  {
+                    print('here');
+                    setState(() {
+                      var str = inputString.split('');
+                      str.removeLast();
+                      inputString = str.join();
+                      inputString = inputString + text;
+                      number = '';
+                    });
+                    print(text);
+                  }
+                else if(number.contains('.')){
+                  if(resultState)
+                  {
+                    setState(() {
+                      inputString = '';
+                      number = '';
+                      answer = 0;
+                      resultState = false;
+                    });
+                  }
+                   if(text!='.'){
+                   setState(() {
+                   inputString = inputString + text;
+                   number = number+text;
+                   });
+                   print(text);
+                   }
+                }
+                else{
+                  if(resultState && !operators.contains(text))
+                  {
+                    setState(() {
+                      inputString = '';
+                      number = '';
+                      answer = 0;
+                      resultState = false;
+                    });
+                  }
+                  setState(() {
+                    inputString = inputString + text;
+                    number = number+text;
+                    resultState = false;
+                  });
+                  print(text);
+                }
+              }
+            else{
+              setState(() {
+                inputString = inputString + text;
+                number = number+text;
+              });
+              print(text);
+            }
+          }
+          else if(text=='='){
+            equalPressed();
+          }
+          else if(text=='AC'){
+            setState(() {
+              inputString='';
+              answer=0;
+            });
+          }
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+  void equalPressed() {
+    try {
+      String finaluserinput = inputString;
+      finaluserinput = inputString.replaceAll('x', '*');
+      //finaluserinput = '100%2';
+      Parser p = Parser();
+      Expression exp = p.parse(finaluserinput);
+      ContextModel cm = ContextModel();
+      double eval = exp.evaluate(EvaluationType.REAL, cm);
+      setState(() {
+        inputString = eval.toString();
+        resultState = true;
+        //inputString = answer.toString();
+        //answer = 0;
+      });
+    }
+    catch (e){
+      setState(() {
+        inputString='';
+        answer=0;
+      });
+    }
+  }
+}
+
+
+/*Container(
+child: PhysicalShape(
+color: Colors.white,
+shadowColor: Colors.grey.shade200,
+elevation: 4,
+clipper: ShapeBorderClipper(shape: CircleBorder()),
+child: Container(
+height: 75,
+width: 75,
+child: Center(
+child: Text(text,style: TextStyle(fontSize: 30,color: color,fontFamily: 'Schyler'),),
+),
+),
+),
+)*/
+
+
+
+/*
+class Button extends StatelessWidget {
+  final String? text;
+  const Button({Key? key,required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: PhysicalShape(
+        color: Colors.white,
+        shadowColor: Colors.grey.shade200,
+        elevation: 4,
+        clipper: ShapeBorderClipper(shape: CircleBorder()),
+        child: Container(
+          height: 75,
+          width: 75,
+          child: Center(
+            child: Text(this.text.toString(),style: TextStyle(fontSize: 30),),
+          ),
+        ),
+      ),
     );
   }
 }
+*/
+
