@@ -16,16 +16,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LandingScreen(),
+      home: MyCalculator(),
     );
   }
 }
 
 class MyCalculator extends StatefulWidget {
-  MyCalculator({Key? key, required this.title}) : super(key: key);
-
-
-  final String title;
 
   @override
   _MyCalculatorState createState() => _MyCalculatorState();
