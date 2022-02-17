@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
+//import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +30,7 @@ class _MyCalculatorState extends State<MyCalculator> {
   double answer = 0.0;
   String inputString = '';
   List<String> operators = ['+','-','x','÷','%'];
+  List<String> inputArray = [];
   String number = '';
   bool resultState = false;
 
@@ -179,6 +180,7 @@ class _MyCalculatorState extends State<MyCalculator> {
           if(text!='AC' && text!='+/-' && text!='=' ) {
             if(operators.contains(text)){
               setState(() {
+                inputArray.add(number);
                 number = '';
               });
             }
@@ -201,6 +203,7 @@ class _MyCalculatorState extends State<MyCalculator> {
                 {
                   setState(() {
                     inputString = '';
+                    inputArray.clear();
                     number = '';
                     answer = 0;
                     resultState = false;
@@ -219,15 +222,24 @@ class _MyCalculatorState extends State<MyCalculator> {
                 {
                   setState(() {
                     inputString = '';
+                    inputArray.clear();
                     number = '';
                     answer = 0;
                     resultState = false;
                   });
                 }
                 setState(() {
-                  inputString = inputString + text;
-                  number = number+text;
-                  resultState = false;
+                  if(operators.contains(text))
+                    {
+                      inputArray.add(text);
+                      inputString = inputString + text;
+                      resultState = false;
+                    }
+                  else{
+                    inputString = inputString + text;
+                    number = number+text;
+                    resultState = false;
+                  }
                 });
                 print(text);
               }
@@ -241,10 +253,17 @@ class _MyCalculatorState extends State<MyCalculator> {
             }
           }
           else if(text=='='){
-            equalPressed();
+            setState(() {
+              inputArray.add(number);
+              inputArray.removeWhere((element) => element=='');
+              number = '';
+            });
+            performDivide();
+            //equalPressed(text);
           }
           else if(text=='AC'){
             setState(() {
+              inputArray.clear();
               inputString='';
               answer=0;
               number = '';
@@ -254,17 +273,21 @@ class _MyCalculatorState extends State<MyCalculator> {
       ),
     );
   }
-  void equalPressed() {
+  void equalPressed(String text) {
+    inputArray.forEach((element) {
+      print(element);
+    });
+    print('length '+inputArray.length.toString());
     try {
       String finaluserinput = inputString;
       finaluserinput = inputString.replaceAll('x', '*');
-      //finaluserinput = '100%2';
-      Parser p = Parser();
+      solveExpression();
+      /*Parser p = Parser();
       Expression exp = p.parse(finaluserinput);
       ContextModel cm = ContextModel();
-      double eval = exp.evaluate(EvaluationType.REAL, cm);
+      double eval = exp.evaluate(EvaluationType.REAL, cm);*/
       setState(() {
-        inputString = eval.toString();
+        //inputString = eval.toString();
         resultState = true;
         number = '';
         //inputString = answer.toString();
@@ -274,11 +297,51 @@ class _MyCalculatorState extends State<MyCalculator> {
     catch (e){
       setState(() {
         inputString='';
+        inputArray.clear();
         answer=0;
         number = '';
       });
     }
   }
+
+  solveExpression(){
+    if(inputArray.length==1)
+      return inputArray[0];
+
+    if(inputArray.contains('÷')){
+      performDivide();
+    }
+    else if(inputArray.contains('x'))
+      {
+        performMult();
+      }
+    else if(inputArray.contains('+')){
+      performAdd();
+    }
+    else if(inputArray.contains('-')){
+      performSub();
+    }
+  }
+
+  performDivide(){
+    var index = inputArray.indexOf('÷');
+    print('index '+index.toString());
+    var result = double.parse(inputArray[index-1])/double.parse(inputArray[index+1]);
+    print('result '+result.toString());
+    inputArray[index-1] = result.toString();
+    inputArray.removeAt(index);
+    inputArray.removeAt(index+1);
+  }
+  performMult(){
+
+  }
+  performAdd(){
+
+  }
+  performSub(){
+
+  }
+
 }
 
 
