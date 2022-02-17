@@ -95,7 +95,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                               },
                           ),
-                          Text('Remember Me',style: TextStyle(color: Colors.white,fontSize: 12),)
+                          GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  check = !check;
+                                });
+                              },
+                              child: Text('Remember Me',style: TextStyle(color: Colors.white,fontSize: 12),))
                         ],),
                       ),
                       ElevatedButton(
@@ -117,41 +123,45 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: height*0.01,),
                       Text('Forgot Password',style: TextStyle(decoration: TextDecoration.underline,color: Colors.white,fontSize: 12),),
                       SizedBox(height: height*0.01,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Don\'t have an account ',style: TextStyle(color: Colors.white,fontSize: 12),),
-                          Text('Register',style: TextStyle(decoration: TextDecoration.underline,color: Colors.white,fontSize: 12),),
-                        ],
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(text: 'Don\'t have an account ',style: TextStyle(color: Colors.white,fontSize: 12),),
+                            TextSpan(
+                              text: 'Register',
+                                style: TextStyle(decoration: TextDecoration.underline,color: Colors.white,fontSize: 12),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: height*0.12,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: width*0.1,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white)
-                            ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                primary: Colors.transparent,
+                                side: BorderSide(width: 1.0, color: Colors.white,)),
                             child: Center(child: Image.asset('assets/icons/ic_aboutus.png',width: width*0.1,),),
                           ),
                           SizedBox(width: width*0.18,),
-                          Container(
-                            width: width*0.1,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white)
-                            ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                primary: Colors.transparent,
+                                side: BorderSide(width: 1.0, color: Colors.white,)),
                             child: Center(child: Image.asset('assets/icons/ic_locator.png',width: width*0.1,),),
                           ),
                           SizedBox(width: width*0.18,),
-                          Container(
-                            width: width*0.1,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white)
-                            ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                primary: Colors.transparent,
+                                side: BorderSide(width: 1.0, color: Colors.white,)),
                             child: Center(child: Image.asset('assets/icons/ic_phone.png',width: width*0.1,),),
                           ),
                         ],),

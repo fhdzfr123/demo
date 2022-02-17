@@ -21,6 +21,16 @@ class LandingScreen extends StatelessWidget {
         ),
         child: Stack(
           children: [
+            Padding(
+                padding: EdgeInsets.only(top: height*0.22,left: width*0.78),
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white
+                  ),
+                  child: Text('AR',style: TextStyle(color: Colors.black,fontSize: 15),)
+                )),
             Container(
               width: width,
               height: height,
@@ -44,7 +54,7 @@ class LandingScreen extends StatelessWidget {
               padding: EdgeInsets.only(top: height*0.45),
               child: Column(
                 children: [
-
+                  Text('Welcome',style: TextStyle(color: Colors.white,fontSize: 12),),
                   SizedBox(height: height*0.03,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -52,26 +62,26 @@ class LandingScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                      Container(
-                        width: width*0.1,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white)
+                        ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                primary: Colors.transparent,
+                                side: BorderSide(width: 1.0, color: Colors.white,)),
+                            child: Center(child: Image.asset('assets/icons/ic_aboutus.png',width: width*0.1,),),
                         ),
-                        child: Center(child: Image.asset('assets/icons/ic_aboutus.png',width: width*0.1,),),
-                      ),
                         Text('About US',style: TextStyle(color: Colors.white,fontSize: 12),)
                     ],),
                       SizedBox(width: width*0.18,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            width: width*0.1,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white)
-                            ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                primary: Colors.transparent,
+                                side: BorderSide(width: 1.0, color: Colors.white,)),
                             child: Center(child: Image.asset('assets/icons/ic_locator.png',width: width*0.1,),),
                           ),
                           Text('ATM Locator',style: TextStyle(color: Colors.white,fontSize: 12),)
@@ -80,12 +90,12 @@ class LandingScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            width: width*0.1,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white)
-                            ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                primary: Colors.transparent,
+                                side: BorderSide(width: 1.0, color: Colors.white,)),
                             child: Center(child: Image.asset('assets/icons/ic_phone.png',width: width*0.1,),),
                           ),
                           Text('Contact US',style: TextStyle(color: Colors.white,fontSize: 12),)
