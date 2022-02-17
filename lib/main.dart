@@ -289,6 +289,7 @@ class _MyCalculatorState extends State<MyCalculator> {
       setState(() {
         //inputString = eval.toString();
         resultState = true;
+
         number = '';
         //inputString = answer.toString();
         //answer = 0;
