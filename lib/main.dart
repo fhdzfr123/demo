@@ -258,8 +258,8 @@ class _MyCalculatorState extends State<MyCalculator> {
               inputArray.removeWhere((element) => element=='');
               number = '';
             });
-            performDivide();
-            //equalPressed(text);
+            //performDivide();
+            equalPressed(text);
           }
           else if(text=='AC'){
             setState(() {
@@ -281,7 +281,8 @@ class _MyCalculatorState extends State<MyCalculator> {
     try {
       String finaluserinput = inputString;
       finaluserinput = inputString.replaceAll('x', '*');
-      solveExpression();
+      var result = solveExpression();
+      print('final result ' + answer.toString());
       /*Parser p = Parser();
       Expression exp = p.parse(finaluserinput);
       ContextModel cm = ContextModel();
@@ -306,8 +307,13 @@ class _MyCalculatorState extends State<MyCalculator> {
   }
 
   solveExpression(){
-    if(inputArray.length==1)
+    if(inputArray.length==1) {
+      setState(() {
+        resultState = true;
+        answer = double.parse(inputArray[0]);
+      });
       return inputArray[0];
+    }
 
     if(inputArray.contains('÷')){
       performDivide();
@@ -322,6 +328,7 @@ class _MyCalculatorState extends State<MyCalculator> {
     else if(inputArray.contains('-')){
       performSub();
     }
+    solveExpression();
   }
 
   performDivide(){
@@ -329,18 +336,68 @@ class _MyCalculatorState extends State<MyCalculator> {
     print('index '+index.toString());
     var result = double.parse(inputArray[index-1])/double.parse(inputArray[index+1]);
     print('result '+result.toString());
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
     inputArray[index-1] = result.toString();
-    inputArray.removeAt(index);
-    inputArray.removeAt(index+1);
+    inputArray[index]='';
+    inputArray[index+1]='';
+    print('new line');
+    inputArray.removeWhere((element) => element=='');
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
   }
   performMult(){
-
+    var index = inputArray.indexOf('x');
+    print('index '+index.toString());
+    var result = double.parse(inputArray[index-1])*double.parse(inputArray[index+1]);
+    print('result '+result.toString());
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
+    inputArray[index-1] = result.toString();
+    inputArray[index]='';
+    inputArray[index+1]='';
+    print('new line');
+    inputArray.removeWhere((element) => element=='');
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
   }
   performAdd(){
-
+    var index = inputArray.indexOf('+');
+    print('index '+index.toString());
+    var result = double.parse(inputArray[index-1])+double.parse(inputArray[index+1]);
+    print('result '+result.toString());
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
+    inputArray[index-1] = result.toString();
+    inputArray[index]='';
+    inputArray[index+1]='';
+    print('new line');
+    inputArray.removeWhere((element) => element=='');
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
   }
   performSub(){
-
+    var index = inputArray.indexOf('-');
+    print('index '+index.toString());
+    var result = double.parse(inputArray[index-1])-double.parse(inputArray[index+1]);
+    print('result '+result.toString());
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
+    inputArray[index-1] = result.toString();
+    inputArray[index]='';
+    inputArray[index+1]='';
+    print('new line');
+    inputArray.removeWhere((element) => element=='');
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
   }
 
 }
