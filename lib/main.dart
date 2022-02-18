@@ -1,4 +1,6 @@
+import 'package:demo/Provider/themeprovider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 //import 'package:math_expressions/math_expressions.dart';
 
 void main() {
@@ -9,13 +11,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyCalculator(),
+    return ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      builder: (context,_){
+        final themeProvider = Provider.of<ThemeProvider>(context);
+         return MaterialApp(
+          title: 'Flutter Demo',
+          themeMode: themeProvider.themeMode,
+          darkTheme: CustomTheme.darkThemeData,
+          debugShowCheckedModeBanner: false,
+          theme:CustomTheme.lightThemeData,
+          home: MyCalculator(),
+        );
+      },
     );
   }
 }
@@ -39,103 +47,125 @@ class _MyCalculatorState extends State<MyCalculator> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Calculator'),
+        actions: [
+          DropdownButton<String>(
+            icon: Icon(Icons.more_vert,color: Colors.white,),
+            items: <String>['Dark Theme', 'Light Theme'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (v) {
+                  if(v=='Dark Theme') {
+                    final provider = Provider.of<ThemeProvider>(context, listen: false);
+                    provider.toggleTheme(true);
+                  }
+                  else
+                    {
+                      final provider = Provider.of<ThemeProvider>(context, listen: false);
+                      provider.toggleTheme(false);
+                    }
+            },
+          )
+        ],
+      ),
         body: Container(
           padding: EdgeInsets.all(10),
           width: width,
           height: height,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 3,
-                child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text(answer!=0 ? answer.toString() : inputString!=''? inputString : '0',style: TextStyle(fontSize: 55),)),
-              ),
-              SizedBox(
-                height: height*0.25,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Align(
+                  alignment: Alignment.topRight,
+                  child: Text(answer!=0 ? answer.toString() : inputString!=''? inputString : '0',style: TextStyle(fontSize: 55),)),
+              Wrap(
+                spacing: 1,
                 children: [
-                  button('AC',Colors.grey),
-                  button('+/-',Colors.grey),
-                  button('%',Colors.grey),
-                  button('÷',Colors.orangeAccent.shade100),
-                ],
-              ),
-              SizedBox(height: 15,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  button('7',Colors.black),
-                  button('8',Colors.black),
-                  button('9',Colors.black),
-                  button('x',Colors.orangeAccent.shade100),
-                ],
-              ),
-              SizedBox(height: 15,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  button('4',Colors.black),
-                  button('5',Colors.black),
-                  button('6',Colors.black),
-                  button('-',Colors.orangeAccent.shade100),
-                ],
-              ),
-              SizedBox(height: 15,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  button('1',Colors.black),
-                  button('2',Colors.black),
-                  button('3',Colors.black),
-                  button('+',Colors.orangeAccent.shade100),
-                ],
-              ),
-              SizedBox(height: 15,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))), primary: Colors.white),
-                    child: Container(
-                      width: width*0.35,
-                      height: height*0.08,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(shape: BoxShape.circle),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '0',
-                          style: TextStyle(fontSize: 24,color: Colors.black),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      if(resultState)
-                      {
-                        setState(() {
-                          inputString = '';
-                          number = '';
-                          answer = 0;
-                          resultState = false;
-                        });
-                      }
-                      if(inputString!='') {
-                        setState(() {
-                          inputString = inputString + '0';
-                        });
-                        print('0');
-                      }
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button('AC',Colors.grey),
+                      button('+/-',Colors.grey),
+                      button('%',Colors.grey),
+                      button('÷',Colors.orangeAccent.shade100),
+                    ],
                   ),
-                  SizedBox(width: width*0.05,),
-                  /*Container(
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button('7',null),
+                      button('8',null),
+                      button('9',null),
+                      button('x',Colors.orangeAccent.shade100),
+                    ],
+                  ),
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button('4',null),
+                      button('5',null),
+                      button('6',null),
+                      button('-',Colors.orangeAccent.shade100),
+                    ],
+                  ),
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button('1',null),
+                      button('2',null),
+                      button('3',null),
+                      button('+',Colors.orangeAccent.shade100),
+                    ],
+                  ),
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),),
+                        child: Container(
+                          width: width*0.35,
+                          height: height*0.08,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(shape: BoxShape.circle),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '0',
+                              style: Theme.of(context).textTheme.headline1,
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          if(resultState)
+                          {
+                            setState(() {
+                              inputString = '';
+                              number = '';
+                              answer = 0;
+                              resultState = false;
+                            });
+                          }
+                          if(inputString!='') {
+                            setState(() {
+                              inputString = inputString + '0';
+                            });
+                            print('0');
+                          }
+                        },
+                      ),
+                      SizedBox(width: width*0.05,),
+                      /*Container(
                   child: PhysicalShape(
                     color: Colors.white,
                     shadowColor: Colors.grey,
@@ -149,8 +179,10 @@ class _MyCalculatorState extends State<MyCalculator> {
                     ),
                   ),
                 ),*/
-                  button('.',Colors.black),
-                  button('=',Colors.orangeAccent.shade100),
+                      button('.',null),
+                      button('=',Colors.orangeAccent.shade100),
+                    ],
+                  )
                 ],
               )
             ],
@@ -165,7 +197,7 @@ class _MyCalculatorState extends State<MyCalculator> {
     return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(), primary: Colors.white),
+            shape: const CircleBorder(),),
         child: Container(
           width: width*0.1,
           height: height*0.1,
@@ -173,7 +205,7 @@ class _MyCalculatorState extends State<MyCalculator> {
           decoration: const BoxDecoration(shape: BoxShape.circle),
           child: Text(
             text,
-            style: TextStyle(fontSize: 24,color: color),
+            style: color==null ? Theme.of(context).textTheme.headline1 : TextStyle(fontSize: 24,color: color,fontWeight: FontWeight.bold),
           ),
         ),
         onPressed: () {
@@ -261,6 +293,18 @@ class _MyCalculatorState extends State<MyCalculator> {
             //performDivide();
             equalPressed(text);
           }
+          else if(text=='+/-'){
+            setState(() {
+              inputArray.add(number);
+              var no = inputArray[inputArray.length-1];
+              print(no);
+              //inputArray.replaceRange(inputArray.length-1, inputArray.length-1, no*(-1));
+              inputArray[inputArray.length-1] = (no*(-1)).toString();
+            });
+            inputArray.forEach((element) {
+              print('input array '+ element);
+            });
+          }
           else if(text=='AC'){
             setState(() {
               inputArray.clear();
@@ -315,7 +359,13 @@ class _MyCalculatorState extends State<MyCalculator> {
       return inputArray[0];
     }
 
-    if(inputArray.contains('÷')){
+    if(inputArray.contains('%')){
+      inputArray.forEach((element) {
+        print('input array '+ element);
+      });
+      performPerc();
+    }
+    else if(inputArray.contains('÷')){
       performDivide();
     }
     else if(inputArray.contains('x'))
@@ -329,6 +379,24 @@ class _MyCalculatorState extends State<MyCalculator> {
       performSub();
     }
     solveExpression();
+  }
+
+  performPerc(){
+    var index = inputArray.indexOf('%');
+    print('index '+index.toString());
+    var result = (double.parse(inputArray[index-1])*100)/double.parse(inputArray[index+1]);
+    print('result '+result.toString());
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
+    inputArray[index-1] = result.toString();
+    inputArray[index]='';
+    inputArray[index+1]='';
+    print('new line');
+    inputArray.removeWhere((element) => element=='');
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
   }
 
   performDivide(){
@@ -401,49 +469,4 @@ class _MyCalculatorState extends State<MyCalculator> {
   }
 
 }
-
-
-/*Container(
-child: PhysicalShape(
-color: Colors.white,
-shadowColor: Colors.grey.shade200,
-elevation: 4,
-clipper: ShapeBorderClipper(shape: CircleBorder()),
-child: Container(
-height: 75,
-width: 75,
-child: Center(
-child: Text(text,style: TextStyle(fontSize: 30,color: color,fontFamily: 'Schyler'),),
-),
-),
-),
-)*/
-
-
-
-/*
-class Button extends StatelessWidget {
-  final String? text;
-  const Button({Key? key,required this.text}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: PhysicalShape(
-        color: Colors.white,
-        shadowColor: Colors.grey.shade200,
-        elevation: 4,
-        clipper: ShapeBorderClipper(shape: CircleBorder()),
-        child: Container(
-          height: 75,
-          width: 75,
-          child: Center(
-            child: Text(this.text.toString(),style: TextStyle(fontSize: 30),),
-          ),
-        ),
-      ),
-    );
-  }
-}
-*/
 
