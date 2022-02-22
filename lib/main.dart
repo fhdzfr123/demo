@@ -227,6 +227,8 @@ class _MyCalculatorState extends State<MyCalculator> {
                   str.removeLast();
                   inputString = str.join();
                   inputString = inputString + text;
+                  inputArray.removeLast();
+                  inputArray[inputArray.length-1] = text;
                   number = '';
                 });
                 print(text);
@@ -295,16 +297,36 @@ class _MyCalculatorState extends State<MyCalculator> {
             equalPressed(text);
           }
           else if(text=='+/-'){
-            setState(() {
+            if(number!='')
               inputArray.add(number);
+
+            removeString();
+
+            inputArray[inputArray.length-1] = (double.parse(inputArray[inputArray.length-1].toString()) * -1).toString();
+            print('new array ');
+            setState(() {
+              inputString = inputString + '(' + inputArray[inputArray.length-1] + ')';
+            });
+            number = '';
+            inputArray.forEach((element) {
+            print('input array '+ element);
+            });
+            /*setState(() {
+              if(operators.contains(inputArray[inputArray.length-1]))
+                {
+                  print('here');
+                  inputArray.add(number);
+                }
+              print('here 1');
               inputArray.forEach((element) {
                 print('input array '+ element);
               });
+
               var lastVal = inputArray[inputArray.length-1];
               inputArray[inputArray.length-1] = (double.parse(number)*(-1)).toString();
               var str = inputString.split('');
+              str.removeLast();
               str.add('('+(double.parse(number)*(-1)).toString()+')');
-              //str.
               inputString = str.join();
               setState(() {
                 number = '';
@@ -313,17 +335,17 @@ class _MyCalculatorState extends State<MyCalculator> {
               inputArray.forEach((element) {
                 print('input array '+ element);
               });
-              /*var str = inputString.split('');
+              *//*var str = inputString.split('');
               str.removeLast();
-              inputString = str.join();*/
-              /*var no = inputArray[inputArray.length-1];
+              inputString = str.join();*//*
+              *//*var no = inputArray[inputArray.length-1];
               print(no);
               //inputArray.replaceRange(inputArray.length-1, inputArray.length-1, no*(-1));
-              inputArray[inputArray.length-1] = (no*(-1)).toString();*/
+              inputArray[inputArray.length-1] = (no*(-1)).toString();*//*
             });
             inputArray.forEach((element) {
               print('input array '+ element);
-            });
+            });*/
           }
           else if(text=='AC'){
             setState(() {
@@ -338,6 +360,16 @@ class _MyCalculatorState extends State<MyCalculator> {
       ),
     );
   }
+
+  removeString(){
+    if(operators.contains(inputString[inputString.length-1]) && inputString[inputString.length-2] != '(')
+      return '';
+    var str = inputString.split('');
+    str.removeLast();
+    inputString = str.join();
+    removeString();
+  }
+
   void equalPressed(String text) {
     inputArray.forEach((element) {
       print(element);
@@ -367,7 +399,8 @@ class _MyCalculatorState extends State<MyCalculator> {
     if(inputArray.length==1) {
       setState(() {
         resultState = true;
-        answer = double.parse(inputArray[0]);
+        //print('verify ans '+inputArray[0]);
+        //answer = double.parse(inputArray[0]);
       });
       return inputArray[0];
     }
@@ -410,11 +443,11 @@ class _MyCalculatorState extends State<MyCalculator> {
     var index = inputArray.indexOf('%');
     print('index '+index.toString());
     var result = (double.parse(inputArray[index-1])*100)/double.parse(inputArray[index+1]);
+    answer = result;
     print('result '+result.toString());
     inputArray[index-1] = result.toString();
     inputArray[index]='';
     inputArray[index+1]='';
-    print('new line');
     inputArray.removeWhere((element) => element=='');
   }
 
@@ -422,47 +455,85 @@ class _MyCalculatorState extends State<MyCalculator> {
     var index = inputArray.indexOf('÷');
     print('index '+index.toString());
     var result = double.parse(inputArray[index-1])/double.parse(inputArray[index+1]);
+    answer = result;
     print('result '+result.toString());
     inputArray[index-1] = result.toString();
     inputArray[index]='';
     inputArray[index+1]='';
-    print('new line');
     inputArray.removeWhere((element) => element=='');
   }
   performMult(){
     var index = inputArray.indexOf('x');
     print('index '+index.toString());
     var result = double.parse(inputArray[index-1])*double.parse(inputArray[index+1]);
+    answer = result;
     print('result '+result.toString());
     inputArray[index-1] = result.toString();
     inputArray[index]='';
     inputArray[index+1]='';
-    print('new line');
     inputArray.removeWhere((element) => element=='');
   }
 
   performAdd(){
     var index = inputArray.indexOf('+');
+    bool minus=false;
+    if(inputArray.length>4 && index!=1)
+    {
+      minus = inputArray[index-2]=='-' ? true: false;
+      print('minus '+ minus.toString());
+    }
     print('index '+index.toString());
-    var result = double.parse(inputArray[index-1])+double.parse(inputArray[index+1]);
+    var result = minus ? -double.parse(inputArray[index-1])+double.parse(inputArray[index+1]):double.parse(inputArray[index-1])+double.parse(inputArray[index+1]);
     print('result '+result.toString());
+    answer = result;
+    if(result<0 && index!=1){
+      print('minus me h result');
+      result = (result*-1);
+      if(inputArray.length>4 && index!=1)
+      inputArray[index-2] = '-';
+    }
+    else if(index!=1){
+      inputArray[index-2] = '+';
+    }
     inputArray[index-1] = result.toString();
     inputArray[index]='';
     inputArray[index+1]='';
-    print('new line');
     inputArray.removeWhere((element) => element=='');
   }
 
   performSub(){
     var index = inputArray.indexOf('-');
     print('index '+index.toString());
-    var result = double.parse(inputArray[index-1])-double.parse(inputArray[index+1]);
+    bool minus=false;
+    print('check 1');
+    if(inputArray.length>4 && index!=1)
+    {
+      print('minus check');
+      minus = inputArray[index-2] =='-' ? true: false;
+      print('minus '+ minus.toString());
+    }
+    print('minus check end');
+    var result = minus? -double.parse(inputArray[index-1])-double.parse(inputArray[index+1]): double.parse(inputArray[index-1])-double.parse(inputArray[index+1]);
     print('result '+result.toString());
+    answer = result;
+    if(result<0 && index !=1){
+      print('minus me h result');
+      result = (result*-1);
+      if(inputArray.length>4 && index!=1)
+      inputArray[index-2] = '-';
+    }
+    else if(index!=1){
+      inputArray[index-2] = '+';
+    }
+
     inputArray[index-1] = result.toString();
     inputArray[index]='';
     inputArray[index+1]='';
-    print('new line');
+    print('verify result '+result.toString());
     inputArray.removeWhere((element) => element=='');
+    inputArray.forEach((element) {
+      print('input array '+ element);
+    });
   }
 
 }
